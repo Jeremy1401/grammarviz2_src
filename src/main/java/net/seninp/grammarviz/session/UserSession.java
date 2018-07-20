@@ -23,15 +23,17 @@ public class UserSession {
   public static final String PARAMS_CHANGED_EVENT = "parameters_changed";
 
   /** The default values. */
-  private static final int DEFAULT_SAX_WINDOW = 170;
-  private static final int DEFAULT_SAX_PAA = 4;
+  private static final int DEFAULT_SAX_WINDOW = 2000;
+  private static final int DEFAULT_SAX_PAA = 20;
   private static final int DEFAULT_SAX_ALPHABET = 4;
   private static final boolean USE_SLIDING_WINDOW = true;
   private static final Double DEFAULT_NORMALIZATION_THRESHOLD_VALUE = 0.05;
   private static final NumerosityReductionStrategy DEFAULT_NUMEROSITY_REDUCTION_STRATEGY = NumerosityReductionStrategy.EXACT;
   private static final GIAlgorithm DEFAULT_GI_ALGORITHM = GIAlgorithm.SEQUITUR;
   private static final CoverageCountStrategy DEFAULT_COUNT_STRATEGY = CoverageCountStrategy.COUNT;
-
+  private static final boolean DEFAULT_USE_SPARK = false;
+  private static final int DEFAULT_CLUSTER_K = 1;
+  private static final double DEFAULT__CLUSTER_THRESHOLD = 0.2;
   // discretization variables
   //
   public volatile int saxWindow;
@@ -52,7 +54,9 @@ public class UserSession {
   public volatile Integer samplingEnd;
   public volatile Double minimalCoverThreshold = 0.98;
   public volatile int[] boundaries = { 10, 200, 10, 2, 10, 1, 2, 10, 1 };
-
+  public volatile boolean useSpark;
+  public volatile Integer k;
+  public volatile Double threshold;
   // auxiliary variables
   //
   public volatile String ruleDensityOutputFileName;
@@ -80,7 +84,9 @@ public class UserSession {
     this.normalizationThreshold = DEFAULT_NORMALIZATION_THRESHOLD_VALUE;
     this.giAlgorithm = DEFAULT_GI_ALGORITHM;
     this.countStrategy = DEFAULT_COUNT_STRATEGY;
-
+    this.useSpark = DEFAULT_USE_SPARK;
+    this.k = DEFAULT_CLUSTER_K;
+    this.threshold = DEFAULT__CLUSTER_THRESHOLD;
     // attempt to fill the rule coverage name automatically
     //
     String filename = "";

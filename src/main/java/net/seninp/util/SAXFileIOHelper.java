@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import net.seninp.gi.logic.RuleInterval;
+import net.seninp.gi.logic.GrammarRules;
 
 /**
  * Implements few things for IO.
@@ -182,5 +183,13 @@ public class SAXFileIOHelper {
     catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+
+  /**
+   * Saves the grammar rules into the csv file.
+   * */
+  public static void writeCsvFile(String path, String fileName, GrammarRules rules){
+
   }
 }

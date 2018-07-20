@@ -6,144 +6,157 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
 import javax.swing.JFileChooser;
+
 import net.seninp.grammarviz.model.GrammarVizMessage;
 import net.seninp.grammarviz.model.GrammarVizModel;
 import net.seninp.grammarviz.session.UserSession;
 
 /**
  * Implements the Controler component for GrammarViz2 GUI MVC.
- * 
+ *
  * @author psenin
- * 
  */
 public class GrammarVizController extends Observable implements ActionListener {
 
-  private GrammarVizModel model;
+    private GrammarVizModel model;
 
-  private UserSession session;
+    private UserSession session;
 
-  /**
-   * Constructor.
-   * 
-   * @param model the program's model.
-   */
-  public GrammarVizController(GrammarVizModel model) {
-    super();
-    this.model = model;
-    this.session = new UserSession();
-  }
+    /**
+     * Constructor.
+     *
+     * @param model the program's model.
+     */
+    public GrammarVizController(GrammarVizModel model) {
+        super();
+        this.model = model;
+        this.session = new UserSession();
+    }
 
-  /**
-   * Implements a listener for the "Browse" button at GUI; opens FileChooser and so on.
-   * 
-   * @return the action listener.
-   */
-  public ActionListener getBrowseFilesListener() {
+    /**
+     * Implements a listener for the "Browse" button at GUI; opens FileChooser and so on.
+     *
+     * @return the action listener.
+     */
+    public ActionListener getBrowseFilesListener() {
 
-    ActionListener selectDataActionListener = new ActionListener() {
+        ActionListener selectDataActionListener = new ActionListener() {
 
-      public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) {
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Select Data File");
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Select Data File");
 
-        String filename = model.getDataFileName();
-        if (!((null == filename) || filename.isEmpty())) {
-          fileChooser.setSelectedFile(new File(filename));
-        }
+                String filename = model.getDataFileName();
+                if (!((null == filename) || filename.isEmpty())) {
+                    fileChooser.setSelectedFile(new File(filename));
+                }
 
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-          File file = fileChooser.getSelectedFile();
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
 
-          // here it calls to model -informing about the selected file.
-          //
-          model.setDataSource(file.getAbsolutePath());
-        }
-      }
+                    // here it calls to model -informing about the selected file.
+                    //
+                    model.setDataSource(file.getAbsolutePath());
+                }
+            }
 
-    };
-    return selectDataActionListener;
-  }
+        };
+        return selectDataActionListener;
+    }
 
-  /**
-   * Load file listener.
-   * 
-   * @return the listener instance.
-   */
-  public ActionListener getLoadFileListener() {
-    ActionListener loadDataActionListener = new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        model.loadData(e.getActionCommand());
-      }
-    };
-    return loadDataActionListener;
-  }
+    /**
+     * Load file listener.
+     *
+     * @return the listener instance.
+     */
+    public ActionListener getLoadFileListener() {
+        ActionListener loadDataActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                model.loadData(e.getActionCommand());
+            }
+        };
+        return loadDataActionListener;
+    }
 
-  /**
-   * This provide Process action listener. Gets all the parameters from the session component
-   * 
-   * @return
-   */
-  public ActionListener getProcessDataListener() {
+    /**
+     * This provide Process action listener. Gets all the parameters from the session component
+     *
+     * @return
+     */
+    public ActionListener getProcessDataListener() {
 
-    ActionListener discretizeAndGrammarListener = new ActionListener() {
-      public void actionPerformed(ActionEvent event) {
+        ActionListener discretizeAndGrammarListener = new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
 
-        StringBuffer logSB = new StringBuffer("running inference with settings:");
+                StringBuffer logSB = new StringBuffer("running inference with settings:");
 
-        logSB.append(" SAX window: ").append(session.useSlidingWindow);
-        logSB.append(", SAX paa: ").append(session.useSlidingWindow);
-        logSB.append(", SAX alphabet: ").append(session.useSlidingWindow);
+                logSB.append(" SAX window: ").append(session.useSlidingWindow);
+                logSB.append(", SAX paa: ").append(session.useSlidingWindow);
+                logSB.append(", SAX alphabet: ").append(session.useSlidingWindow);
 
-        logSB.append(", sliding window:").append(session.useSlidingWindow);
-        logSB.append(", num.reduction:").append(session.useSlidingWindow);
-        logSB.append(", norm.threshold: ").append(session.useSlidingWindow);
+                logSB.append(", sliding window:").append(session.useSlidingWindow);
+                logSB.append(", num.reduction:").append(session.useSlidingWindow);
+                logSB.append(", norm.threshold: ").append(session.useSlidingWindow);
+                logSB.append(", GI alg: ").append(session.giAlgorithm);
 
-        logSB.append(", GI alg: ").append(session.giAlgorithm);
+                logSB.append(", grammar filename: ").append(session.useSlidingWindow);
 
-        logSB.append(", grammar filename: ").append(session.useSlidingWindow);
+                log(logSB.toString());
 
-        log(logSB.toString());
+                try {
+                    model.processData(session.giAlgorithm, session.useSlidingWindow,
+                            session.numerosityReductionStrategy, session.saxWindow, session.saxPAA,
+                            session.saxAlphabet, session.normalizationThreshold, session.grammarOutputFileName);
+                } catch (IOException exception) {
+                    // TODO Auto-generated catch block
+                    exception.printStackTrace();
+                }
 
-        try {
-          model.processData(session.giAlgorithm, session.useSlidingWindow,
-              session.numerosityReductionStrategy, session.saxWindow, session.saxPAA,
-              session.saxAlphabet, session.normalizationThreshold, session.grammarOutputFileName);
-        }
-        catch (IOException exception) {
-          // TODO Auto-generated catch block
-          exception.printStackTrace();
-        }
+            }
+        };
+        return discretizeAndGrammarListener;
+    }
 
-      }
-    };
-    return discretizeAndGrammarListener;
-  }
+    public ActionListener getCluserListener() {
+        ActionListener cluserListener = new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    this.setChanged();
-    notifyObservers(new GrammarVizMessage(GrammarVizMessage.STATUS_MESSAGE,
-        "controller: Unknown action performed " + e.getActionCommand()));
-  }
+                StringBuffer logSB = new StringBuffer("running inference with settings:");
+                logSB.append(", cluster k: ").append(session.k);
+                logSB.append(", cluster th: ").append(session.threshold);
+                log(logSB.toString());
 
-  /**
-   * Gets the current session.
-   * 
-   * @return
-   */
-  public UserSession getSession() {
-    return this.session;
-  }
+                model.getChartData().setClusterParams(session.k, session.threshold);
+            }
+        };
+        return cluserListener;
+    }
 
-  /**
-   * Performs logging messages distribution.
-   * 
-   * @param message the message to log.
-   */
-  private void log(String message) {
-    this.setChanged();
-    notifyObservers(
-        new GrammarVizMessage(GrammarVizMessage.STATUS_MESSAGE, "controller: " + message));
-  }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        this.setChanged();
+        notifyObservers(new GrammarVizMessage(GrammarVizMessage.STATUS_MESSAGE,
+                "controller: Unknown action performed " + e.getActionCommand()));
+    }
+
+    /**
+     * Gets the current session.
+     *
+     * @return
+     */
+    public UserSession getSession() {
+        return this.session;
+    }
+
+    /**
+     * Performs logging messages distribution.
+     *
+     * @param message the message to log.
+     */
+    private void log(String message) {
+        this.setChanged();
+        notifyObservers(
+                new GrammarVizMessage(GrammarVizMessage.STATUS_MESSAGE, "controller: " + message));
+    }
 }

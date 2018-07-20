@@ -81,6 +81,10 @@ class GrammarvizOptionsDialog extends JDialog implements ActionListener {
       this.session.normalizationThreshold = this.optionPane.getNormalizationThreshold();
       logStr.append(", norm threshold: ").append(this.optionPane.getNormalizationThreshold());
 
+      // use spark
+      this.session.useSpark = this.optionPane.getUseSpark();
+      logStr.append(", Use Spark: ").append(this.optionPane.getUseSpark());
+
       // the output file names
       this.session.grammarOutputFileName = this.optionPane.getGrammarOutputFileName();
       logStr.append(", GI output: ").append(this.optionPane.getGrammarOutputFileName());

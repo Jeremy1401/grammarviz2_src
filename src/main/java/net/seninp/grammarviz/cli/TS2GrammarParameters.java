@@ -15,7 +15,7 @@ public class TS2GrammarParameters {
 
   // general setup
   @Parameter
-  public List<String> parameters = new ArrayList<>();
+  public List<String> parameters = new ArrayList<String>();
 
   @Parameter(names = { "--help", "-h" }, help = true)
   public boolean help;
